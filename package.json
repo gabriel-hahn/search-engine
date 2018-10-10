@@ -1,0 +1,20 @@
+{
+  "name": "search-engine",
+  "version": "1.0.0",
+  "description": "A NodeJS search engine like Google",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabriel-hahn/search-engine.git"
+  },
+  "keywords": [],
+  "author": "Gabriel Hahn Schaeffer <gabriel_hahn@hotmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gabriel-hahn/search-engine/issues"
+  },
+  "homepage": "https://github.com/gabriel-hahn/search-engine#readme"
+}
