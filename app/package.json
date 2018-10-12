@@ -4,7 +4,8 @@
   "description": "A NodeJS search engine like Google",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --config webpack.config.js",
+    "start": "webpack-dev-server"
   },
   "repository": {
     "type": "git",
@@ -16,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/gabriel-hahn/search-engine/issues"
   },
-  "homepage": "https://github.com/gabriel-hahn/search-engine#readme"
+  "homepage": "https://github.com/gabriel-hahn/search-engine#readme",
+  "devDependencies": {
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.9"
+  }
 }
