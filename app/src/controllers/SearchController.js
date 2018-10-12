@@ -34,9 +34,37 @@ export default class SearchController {
             this.changeLinkSelection(false);
             this.searchLinks(false);
         });
+
+        this.getLinks();
     }
 
     searchLinks(isSites) {
-        console.log(isSites);
+        let url = new URL(window.location.href);
+        let terms = url.searchParams.get('term');
+    }
+
+    //Get the links into href attributes throuth a URL.
+    getLinks(url) {
+        url = 'https://gabrielhahn.netlify.com/';
+        this.getDOMByURL(url).then(dom => {
+            [...dom.getElementsByTagName('a')].forEach(element => {
+                console.log(element.href);
+            });
+        });
+    }
+
+    //Get the DOM from a URL.
+    getDOMByURL(url) {
+        return new Promise((resolve, reject) => {
+            var ajax = new XMLHttpRequest();
+
+            ajax.open('GET', url);
+            ajax.send();
+
+            ajax.onload = event => {
+                let domElement = new DOMParser().parseFromString(ajax.responseText, 'text/html');
+                resolve(domElement);
+            }
+        });
     }
 }
