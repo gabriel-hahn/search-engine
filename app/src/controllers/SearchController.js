@@ -4,6 +4,8 @@ export default class SearchController {
         this._searchLinkSites = document.getElementById('sitesLink');
         this._searchLinkImages = document.getElementById('imagesLink');
 
+        this._alreadyCrawled = [];
+
         this.startEvents();
     }
 
@@ -35,7 +37,7 @@ export default class SearchController {
             this.searchLinks(false);
         });
 
-        this.getLinks();
+        this.getLinks('https://github.com/gabriel-hahn');
     }
 
     searchLinks(isSites) {
@@ -45,11 +47,26 @@ export default class SearchController {
 
     //Get the links into href attributes throuth a URL.
     getLinks(url) {
-        url = 'https://gabrielhahn.netlify.com/';
-
         this.getDOMByURL(url).then(dom => {
             let links = [...dom.getElementsByTagName('a')].filter(element => element.href.startsWith('http', 0));
             let linksFixed = this.fixUrlsWithRoutes(links, url);
+
+            //Verify if the href already exists in crawled list and add it.
+            if (!this._alreadyCrawled.includes(url)) {
+                this._alreadyCrawled.push(url);
+            }
+
+            //Get the child links that will be 'crawled'.
+            let childLinksToSearch = linksFixed.filter(link => link.href !== url);
+
+            childLinksToSearch.forEach(link => {
+                if (!this._alreadyCrawled.includes(link.href)) {
+                    console.log(link.href);
+                    this.getLinks(link.href);
+                }
+            });
+        }).catch(err => {
+            console.error(err);
         });
     }
 
@@ -64,6 +81,10 @@ export default class SearchController {
             ajax.onload = event => {
                 let domElement = new DOMParser().parseFromString(ajax.responseText, 'text/html');
                 resolve(domElement);
+            }
+
+            ajax.onerror = err => {
+                reject(err);
             }
         });
     }
