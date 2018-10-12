@@ -37,12 +37,21 @@ export default class SearchController {
             this.searchLinks(false);
         });
 
-        this.getLinks('https://github.com/gabriel-hahn');
+        this.getTitleTags('https://www.udemy.com/');
     }
 
     searchLinks(isSites) {
         let url = new URL(window.location.href);
         let terms = url.searchParams.get('term');
+    }
+
+    getTitleTags(url) {
+        this.getDOMByURL(url).then(dom => {
+            let title = dom.getElementsByTagName('head')[0].getElementsByTagName('title');
+            console.log(title);
+        }).catch(err => {
+            console.error(err);
+        });
     }
 
     //Get the links into href attributes throuth a URL.
