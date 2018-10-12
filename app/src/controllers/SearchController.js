@@ -46,10 +46,10 @@ export default class SearchController {
     //Get the links into href attributes throuth a URL.
     getLinks(url) {
         url = 'https://gabrielhahn.netlify.com/';
+
         this.getDOMByURL(url).then(dom => {
-            [...dom.getElementsByTagName('a')].forEach(element => {
-                console.log(element.href);
-            });
+            let links = [...dom.getElementsByTagName('a')].filter(element => element.href.startsWith('http', 0));
+            let linksFixed = this.fixUrlsWithRoutes(links, url);
         });
     }
 
@@ -65,6 +65,17 @@ export default class SearchController {
                 let domElement = new DOMParser().parseFromString(ajax.responseText, 'text/html');
                 resolve(domElement);
             }
+        });
+    }
+
+    //Fix links that contains routes, like /about. For this case, needs to put the correct base URL.
+    fixUrlsWithRoutes(links, originalUrl) {
+        return links.map(link => {
+            if (link.href.startsWith(window.location.href, 0)) {
+                link.href = link.href.replace(window.location.href, originalUrl);
+            }
+
+            return link;
         });
     }
 }
