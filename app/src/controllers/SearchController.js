@@ -37,12 +37,21 @@ export default class SearchController {
             this.searchLinks(false);
         });
 
-        this.getTitleTags('https://www.udemy.com/');
+        this.getMetaTags('https://www.udemy.com/');
     }
 
     searchLinks(isSites) {
         let url = new URL(window.location.href);
         let terms = url.searchParams.get('term');
+    }
+
+    getMetaTags(url) {
+        this.getDOMByURL(url).then(dom => {
+            let meta = dom.getElementsByTagName('meta');
+            console.log(meta);
+        }).catch(err => {
+            console.error(err);
+        });
     }
 
     getTitleTags(url) {
