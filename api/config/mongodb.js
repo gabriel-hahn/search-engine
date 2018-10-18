@@ -1,17 +1,15 @@
-var MongoClient = require('mongodb').MongoClient;
+const mongoose = require('mongoose');
+const requireDir = require('require-dir');
 
-var url = "mongodb://localhost:27017/searchEngine";
 const dbName = 'searchEngine';
+const url = `mongodb://localhost:27017/${dbName}`;
 
-module.exports = application = {
-    insert: (data) => {
-        MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
-            if (err) throw err;
-
-            let db = client.db(dbName);
-
-            console.log('Inserindo um registro');
-            client.close();
-        });
+module.exports = {
+    connectDb: () => {
+        mongoose.connect(url, { useNewUrlParser: true });
+        requireDir('../src/models');
+    },
+    disconnectDb: () => {
+        mongoose.disconnect();
     }
 }

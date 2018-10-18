@@ -10,9 +10,9 @@ app.use(expressValidator());
 
 consign()
     .include('/config/mongodb.js')
-    .then('/routes')
-    .then('/models')
-    .then('/controllers')
+    .then('/src/routes')
+    .then('/src/models')
+    .then('/src/controllers')
     .into(app);
 
 module.exports = app;

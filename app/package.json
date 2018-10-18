@@ -1,7 +1,7 @@
 {
   "name": "search-engine",
   "version": "1.0.0",
-  "description": "A NodeJS search engine like Google",
+  "description": "A webpage like Google to search links",
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",

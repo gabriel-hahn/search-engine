@@ -9,4 +9,4 @@ let DataSchema = new Schema({
     clicks: { type: Number, required: false },
 });
 
-module.exports = mongoose.model('Data', DataSchema);
+mongoose.model('Data', DataSchema);
