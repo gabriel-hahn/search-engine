@@ -1,5 +1,5 @@
 module.exports = {
-    insertData: (data) => {
-        console.log('Insert some data');
+    insertData: (data, app) => {
+        app.config.mongodb.insert(data);
     }
 }
