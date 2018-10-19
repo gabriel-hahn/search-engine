@@ -17,4 +17,16 @@ insertSite = data => {
     MongoDb.disconnectDb();
 }
 
-module.exports = { insertSite }
+getSiteByUrl = async url => {
+    const Site = mongoose.model('Site');
+
+    MongoDb.connectDb();
+
+    let doc = await Site.find({ 'url': url });
+
+    MongoDb.disconnectDb();
+
+    return doc;
+}
+
+module.exports = { insertSite, getSiteByUrl }

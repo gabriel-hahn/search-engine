@@ -11,6 +11,9 @@ export default class SearchController {
         this._alreadyCrawled = [];
 
         this.startEvents();
+
+
+        this.insertLinks('urlteste2.com.br', 'Title test front', 'Description 3', 'Aham, aham');
     }
 
     changeLinkSelection(isSites) {
@@ -41,7 +44,7 @@ export default class SearchController {
             this.searchLinks(false);
         });
 
-        this.getMetaTags('https://www.udemy.com/');
+        this.getMetaTags('http://www.bbc.com/');
     }
 
     searchLinks(isSites) {
@@ -52,7 +55,6 @@ export default class SearchController {
     getMetaTags(url) {
         this.getDOMByURL(url).then(dom => {
             let meta = dom.getElementsByTagName('meta');
-            console.log(meta);
         }).catch(err => {
             console.error(err);
         });
@@ -61,7 +63,6 @@ export default class SearchController {
     getTitleTags(url) {
         this.getDOMByURL(url).then(dom => {
             let title = dom.getElementsByTagName('head')[0].getElementsByTagName('title');
-            console.log(title);
         }).catch(err => {
             console.error(err);
         });
@@ -83,7 +84,6 @@ export default class SearchController {
 
             childLinksToSearch.forEach(link => {
                 if (!this._alreadyCrawled.includes(link.href)) {
-                    console.log(link.href);
                     this.getLinks(link.href);
                 }
             });
@@ -125,10 +125,15 @@ export default class SearchController {
     insertLinks(url, title, description, keywords) {
         let newData = { url, title, description, keywords };
 
-        RequestUtil.post(urlApiData, newData).then(response => {
-            console.log('Success');
-        }).catch(err => {
-            console.error(err);
+        //Verify if the url already exist on db.
+        RequestUtil.post(urlApiData.concat('/url'), newData).then(response => {
+            if (JSON.parse(response).length === 0) {
+                RequestUtil.post(urlApiData, newData).then(data => {
+                    console.log('Success');
+                }).catch(err => {
+                    console.error(err);
+                });
+            }
         });
     }
 }

@@ -6,6 +6,7 @@ const url = `mongodb://localhost:27017/${dbName}`;
 
 module.exports = {
     connectDb: () => {
+        mongoose.Promise = global.Promise;
         mongoose.connect(url, { useNewUrlParser: true });
         requireDir('../src/models');
     },

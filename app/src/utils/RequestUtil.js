@@ -29,7 +29,7 @@ export default class RequestUtil {
             ajax.send(JSON.stringify(data));
 
             ajax.onload = event => {
-                resolve(event);
+                resolve(ajax.responseText);
             }
 
             ajax.onerror = err => {
