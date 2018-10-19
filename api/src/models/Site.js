@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let DataSchema = new Schema({
+let SitesSchema = new Schema({
     url: { type: String, required: true, max: 512 },
     title: { type: String, required: true, max: 512 },
     description: { type: String, required: true, max: 512 },
@@ -9,4 +9,4 @@ let DataSchema = new Schema({
     clicks: { type: Number, required: false },
 });
 
-mongoose.model('Data', DataSchema);
+mongoose.model('Site', SitesSchema);

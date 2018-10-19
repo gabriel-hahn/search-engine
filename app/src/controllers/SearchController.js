@@ -1,3 +1,7 @@
+import RequestUtil from '../utils/RequestUtil';
+
+let urlApiData = 'http://localhost:9090/api/site';
+
 export default class SearchController {
 
     constructor() {
@@ -115,6 +119,16 @@ export default class SearchController {
             }
 
             return link;
+        });
+    }
+
+    insertLinks(url, title, description, keywords) {
+        let newData = { url, title, description, keywords };
+
+        RequestUtil.post(urlApiData, newData).then(response => {
+            console.log('Success');
+        }).catch(err => {
+            console.error(err);
         });
     }
 }
