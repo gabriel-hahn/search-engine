@@ -1,5 +1,5 @@
 # Search Engine
-A NodeJS search engine like Google
+A search engine API + web page like Google
 
 ## Contributing
 
