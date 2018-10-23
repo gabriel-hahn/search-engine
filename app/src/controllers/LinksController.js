@@ -61,20 +61,8 @@ export default class InsertController {
 
     //Get the DOM from a URL.
     getDOMByURL(url) {
-        return new Promise((resolve, reject) => {
-            var ajax = new XMLHttpRequest();
-
-            ajax.open('GET', url);
-            ajax.send();
-
-            ajax.onload = event => {
-                let domElement = new DOMParser().parseFromString(ajax.responseText, 'text/html');
-                resolve(domElement);
-            }
-
-            ajax.onerror = err => {
-                reject(err);
-            }
+        return RequestUtil.get(url).then(response => {
+            return new DOMParser().parseFromString(response, 'text/html');
         });
     }
 
@@ -90,7 +78,7 @@ export default class InsertController {
     }
 
     insertLinks(url, title, description, keywords) {
-        let newData = { url, title, description, keywords };
+        let newData = { url, title, description, keywords};
 
         //Verify if the url already exist on db.
         RequestUtil.get(`${urlApiData}/${newData.url}`).then(response => {

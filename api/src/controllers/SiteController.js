@@ -1,32 +1,13 @@
 const mongoose = require('mongoose');
-const MongoDb = require('../../config/mongodb');
+const Site = mongoose.model('Site');
 
-insertSite = data => {
-    const Site = mongoose.model('Site');
-
-    MongoDb.connectDb();
-
-    Site.create({
-        url: data.url,
-        title: data.title,
-        description: data.description,
-        keywords: data.keywords,
-        clicks: 0,
-    });
-
-    MongoDb.disconnectDb();
-}
-
-getSiteByUrl = url => {
-    const Site = mongoose.model('Site');
-
-    MongoDb.connectDb();
-
-    let doc = Site.find({ 'url': url });
-
-    MongoDb.disconnectDb();
-
-    return doc;
-}
-
-module.exports = { insertSite, getSiteByUrl }
+module.exports = {
+    async insertSite(req, res) {
+        let site = await Site.create(req.body);
+        res.json(site);
+    },
+    async getSiteByUrl(req, res) {
+        let sites = await Site.find({ 'url': req.params.url });
+        res.json(sites);
+    }
+};
