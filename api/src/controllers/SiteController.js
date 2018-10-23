@@ -17,12 +17,12 @@ insertSite = data => {
     MongoDb.disconnectDb();
 }
 
-getSiteByUrl = async url => {
+getSiteByUrl = url => {
     const Site = mongoose.model('Site');
 
     MongoDb.connectDb();
 
-    let doc = await Site.find({ 'url': url });
+    let doc = Site.find({ 'url': url });
 
     MongoDb.disconnectDb();
 

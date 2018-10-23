@@ -11,7 +11,7 @@ export default class RequestUtil {
             ajax.send();
 
             ajax.onload = event => {
-                resolve(event);
+                resolve(ajax.responseText);
             }
 
             ajax.onerror = err => {

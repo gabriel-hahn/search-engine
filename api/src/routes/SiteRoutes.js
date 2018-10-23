@@ -6,8 +6,8 @@ module.exports = app => {
         res.send('Success insert site.');
     });
 
-    app.post('/api/site/url', (req, res) => {
-        SiteController.getSiteByUrl(req.body.url).then(response => {
+    app.get('/api/site/:url', (req, res) => {
+        SiteController.getSiteByUrl(req.params.url).then(response => {
             res.send(response);
         });
     });
