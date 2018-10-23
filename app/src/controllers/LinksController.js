@@ -11,7 +11,7 @@ export default class InsertController {
     }
 
     startEvents() {
-        this.getMetaTags('http://www.bbc.com/');
+        this.getImages('http://www.bbc.com/');
     }
 
     searchLinks(isSites) {
@@ -22,6 +22,7 @@ export default class InsertController {
     getMetaTags(url) {
         this.getDOMByURL(url).then(dom => {
             let meta = dom.getElementsByTagName('meta');
+            return meta;
         }).catch(err => {
             console.error(err);
         });
@@ -30,11 +31,20 @@ export default class InsertController {
     getTitleTags(url) {
         this.getDOMByURL(url).then(dom => {
             let title = dom.getElementsByTagName('head')[0].getElementsByTagName('title');
+            return title;
         }).catch(err => {
             console.error(err);
         });
     }
 
+    getImages(url) {
+        this.getDOMByURL(url).then(dom => {
+            let images = [...dom.getElementsByTagName('img')].filter(image => image.src.startsWith('http', 0));
+            return images;
+        }).catch(err => {
+            console.error(err);
+        });
+    }
     //Get the links into href attributes throuth a URL.
     getLinks(url) {
         this.getDOMByURL(url).then(dom => {
@@ -78,7 +88,7 @@ export default class InsertController {
     }
 
     insertLinks(url, title, description, keywords) {
-        let newData = { url, title, description, keywords};
+        let newData = { url, title, description, keywords };
 
         //Verify if the url already exist on db.
         RequestUtil.get(`${urlApiData}/${newData.url}`).then(response => {
