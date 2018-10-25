@@ -6,7 +6,7 @@ let SitesSchema = new Schema({
     title: { type: String, required: true, max: 512 },
     description: { type: String, required: true, max: 512 },
     keywords: { type: String, required: false, max: 512 },
-    clicks: { type: Number, required: false, default: 0 },
+    clicks: { type: Number, required: true, default: 0 },
 });
 
 mongoose.model('Site', SitesSchema);
