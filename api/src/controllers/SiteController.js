@@ -7,7 +7,7 @@ module.exports = {
         res.json(site);
     },
     async getSiteByUrl(req, res) {
-        let sites = await Site.find({ 'url': req.params.url });
+        let sites = await Site.find({ 'url': req.body.url });
         res.json(sites);
     }
 };

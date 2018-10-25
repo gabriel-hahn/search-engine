@@ -1,6 +1,7 @@
 import RequestUtil from '../utils/RequestUtil';
 
-let urlApiData = 'http://localhost:9090/api/site';
+let apiUrlSite = 'http://localhost:9090/api/site';
+let apiUrlImage = 'http://localhost:9090/api/image';
 
 export default class InsertController {
 
@@ -11,7 +12,7 @@ export default class InsertController {
     }
 
     startEvents() {
-        this.getImages('http://www.bbc.com/');
+        this.getLinks('http://www.bbc.com/');
     }
 
     searchLinks(isSites) {
@@ -20,7 +21,7 @@ export default class InsertController {
     }
 
     getMetaTags(url) {
-        this.getDOMByURL(url).then(dom => {
+        return this.getDOMByURL(url).then(dom => {
             let meta = dom.getElementsByTagName('meta');
             return meta;
         }).catch(err => {
@@ -29,7 +30,7 @@ export default class InsertController {
     }
 
     getTitleTags(url) {
-        this.getDOMByURL(url).then(dom => {
+        return this.getDOMByURL(url).then(dom => {
             let title = dom.getElementsByTagName('head')[0].getElementsByTagName('title');
             return title;
         }).catch(err => {
@@ -54,6 +55,20 @@ export default class InsertController {
             //Verify if the href already exists in crawled list and add it.
             if (!this._alreadyCrawled.includes(url)) {
                 this._alreadyCrawled.push(url);
+
+                this.getTitleTags(url).then(titles => {
+                    let title = titles[0].innerText;
+
+                    //Get description and keywords from site.
+                    this.getMetaTags(url).then(tags => {
+                        let description = [...tags].filter(tag => (tag.attributes["name"] && tag.attributes["name"].nodeValue === 'description'));
+                        description = description && description[0] ? description[0].content : null;
+                        let keyword = [...tags].filter(tag => (tag.attributes["name"] && tag.attributes["name"].nodeValue === 'keywords'));
+                        keyword = keyword && keyword[0] ? keyword[0].content.split(',').map(key => key.trim()).join(',') : null;
+
+                        this.insertLinks(url, title, description, keyword);
+                    });
+                });
             }
 
             //Get the child links that will be 'crawled'.
@@ -79,8 +94,8 @@ export default class InsertController {
     //Fix links that contains routes, like /about. For this case, needs to put the correct base URL.
     fixUrlsWithRoutes(links, originalUrl) {
         return links.map(link => {
-            if (link.href.startsWith(window.location.href, 0)) {
-                link.href = link.href.replace(window.location.href, originalUrl);
+            if (link.href.startsWith(window.origin, 0)) {
+                link.href = link.href.replace(window.origin.concat('/'), originalUrl);
             }
 
             return link;
@@ -91,9 +106,24 @@ export default class InsertController {
         let newData = { url, title, description, keywords };
 
         //Verify if the url already exist on db.
-        RequestUtil.get(`${urlApiData}/${newData.url}`).then(response => {
+        RequestUtil.post(`${apiUrlSite.concat('/siteByUrl')}`, { url }).then(response => {
             if (JSON.parse(response).length === 0) {
-                RequestUtil.post(urlApiData, newData).then(data => {
+                RequestUtil.post(apiUrlSite, newData).then(data => {
+                    console.log('Success');
+                }).catch(err => {
+                    console.error(err);
+                });
+            }
+        });
+    }
+
+    insertImages(siteUrl, imageUrl, alt, title) {
+        let newData = { siteUrl, imageUrl, alt, title };
+
+        //Verify if the imageUrl already exist on db.
+        RequestUtil.post(`${apiUrlImage.concat('/imageByUrl')}`, { imageUrl }).then(response => {
+            if (JSON.parse(response).length === 0) {
+                RequestUtil.post(apiUrlImage, newData).then(data => {
                     console.log('Success');
                 }).catch(err => {
                     console.error(err);

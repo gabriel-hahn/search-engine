@@ -7,7 +7,7 @@ module.exports = {
         res.json(site);
     },
     async getImageByImageUrl(req, res) {
-        let images = await Image.find({ 'imageUrl': req.params.imageUrl });
+        let images = await Image.find({ 'imageUrl': req.body.imageUrl });
         res.json(images);
     }
 };
