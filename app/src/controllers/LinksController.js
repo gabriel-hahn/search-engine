@@ -49,8 +49,6 @@ export default class InsertController {
     //Get the links into href attributes throuth a URL.
     getLinks(url) {
         this.getDOMByURL(url).then(dom => {
-            let links = [...dom.getElementsByTagName('a')].filter(element => element.href.startsWith('http', 0));
-            let linksFixed = this.fixUrlsWithRoutes(links, url);
 
             //Verify if the href already exists in crawled list and add it.
             if (!this._alreadyCrawled.includes(url)) {
@@ -66,19 +64,22 @@ export default class InsertController {
                         let keyword = [...tags].filter(tag => (tag.attributes["name"] && tag.attributes["name"].nodeValue === 'keywords'));
                         keyword = keyword && keyword[0] ? keyword[0].content.split(',').map(key => key.trim()).join(',') : null;
 
-                        this.insertLinks(url, title, description, keyword);
+                        this.insertLinks(url, title, description, keyword).then(data => {
+                            let links = [...dom.getElementsByTagName('a')].filter(element => element.href.startsWith('http', 0));
+                            let linksFixed = this.fixUrlsWithRoutes(links, url);
+
+                            //Get the child links that will be 'crawled'.
+                            let childLinksToSearch = linksFixed.filter(link => link.href !== url);
+
+                            childLinksToSearch.forEach(link => {
+                                if (!this._alreadyCrawled.includes(link.href)) {
+                                    //this.getLinks(link.href);
+                                }
+                            });
+                        });
                     });
                 });
             }
-
-            //Get the child links that will be 'crawled'.
-            let childLinksToSearch = linksFixed.filter(link => link.href !== url);
-
-            childLinksToSearch.forEach(link => {
-                if (!this._alreadyCrawled.includes(link.href)) {
-                    this.getLinks(link.href);
-                }
-            });
         }).catch(err => {
             console.error(err);
         });
@@ -106,7 +107,7 @@ export default class InsertController {
         let newData = { url, title, description, keywords };
 
         //Verify if the url already exist on db.
-        RequestUtil.post(`${apiUrlSite.concat('/siteByUrl')}`, { url }).then(response => {
+        return RequestUtil.post(`${apiUrlSite.concat('/siteByUrl')}`, { url }).then(response => {
             if (JSON.parse(response).length === 0) {
                 RequestUtil.post(apiUrlSite, newData).then(data => {
                     console.log('Success');
@@ -121,7 +122,7 @@ export default class InsertController {
         let newData = { siteUrl, imageUrl, alt, title };
 
         //Verify if the imageUrl already exist on db.
-        RequestUtil.post(`${apiUrlImage.concat('/imageByUrl')}`, { imageUrl }).then(response => {
+        return RequestUtil.post(`${apiUrlImage.concat('/imageByUrl')}`, { imageUrl }).then(response => {
             if (JSON.parse(response).length === 0) {
                 RequestUtil.post(apiUrlImage, newData).then(data => {
                     console.log('Success');
