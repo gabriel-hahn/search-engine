@@ -1,5 +1,5 @@
 # Search Engine
-A search engine API + web page like Google
+A search engine API (NodeJS + MongoDB) and a web page like Google.
 
 ## Contributing
 
