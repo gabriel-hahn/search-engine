@@ -1,5 +1,9 @@
 # Search Engine
-A search engine API (NodeJS + MongoDB) and a web page like Google.
+A search engine API (NodeJS + MongoDB), crawling methods to search websites and a web page like Google to use this API.
+
+## Something in the future?
+
+- [ ] Move websites crawling methods to back-end.
 
 ## Contributing
 
