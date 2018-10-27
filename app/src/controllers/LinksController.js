@@ -7,12 +7,13 @@ export default class InsertController {
 
     constructor() {
         this._alreadyCrawled = [];
+        this._socialNetworks = ['instagram', 'facebook', 'pinterest']
 
         this.startEvents();
     }
 
     startEvents() {
-        this.getLinks('http://www.bbc.com/');
+        //this.getLinks('https://www.facebook.com/', 'https://www.facebook.com/');
     }
 
     searchLinks(isSites) {
@@ -27,6 +28,11 @@ export default class InsertController {
         }).catch(err => {
             console.error(err);
         });
+    }
+
+    //Return if in the url exists a name from a social network, that probably will throw a error because the crawling method doesn't have a authentication from it;
+    getNotSocialNetworkUrl(href) {
+        return this._socialNetworks.filter(socialName => href.indexOf(socialName) > -1) == [];
     }
 
     getTitleTags(url) {
@@ -46,8 +52,9 @@ export default class InsertController {
             console.error(err);
         });
     }
+
     //Get the links into href attributes throuth a URL.
-    getLinks(url) {
+    getLinks(url, host) {
         this.getDOMByURL(url).then(dom => {
 
             //Verify if the href already exists in crawled list and add it.
@@ -64,16 +71,17 @@ export default class InsertController {
                         let keyword = [...tags].filter(tag => (tag.attributes["name"] && tag.attributes["name"].nodeValue === 'keywords'));
                         keyword = keyword && keyword[0] ? keyword[0].content.split(',').map(key => key.trim()).join(',') : null;
 
+                        //After insert the site in DB, do the same things with 'children' urls.
                         this.insertLinks(url, title, description, keyword).then(data => {
                             let links = [...dom.getElementsByTagName('a')].filter(element => element.href.startsWith('http', 0));
-                            let linksFixed = this.fixUrlsWithRoutes(links, url);
+                            let linksFixed = this.fixUrlsWithRoutes(links, host);
 
                             //Get the child links that will be 'crawled'.
                             let childLinksToSearch = linksFixed.filter(link => link.href !== url);
 
                             childLinksToSearch.forEach(link => {
-                                if (!this._alreadyCrawled.includes(link.href)) {
-                                    //this.getLinks(link.href);
+                                if (!this._alreadyCrawled.includes(link.href) && !link.href.startsWith('http://localhost:8080' && !this.getNotSocialNetworkUrl(link.href))) {
+                                    this.getLinks(link.href, link.host);
                                 }
                             });
                         });
@@ -93,10 +101,13 @@ export default class InsertController {
     }
 
     //Fix links that contains routes, like /about. For this case, needs to put the correct base URL.
-    fixUrlsWithRoutes(links, originalUrl) {
+    fixUrlsWithRoutes(links, host) {
         return links.map(link => {
-            if (link.href.startsWith(window.origin, 0)) {
-                link.href = link.href.replace(window.origin.concat('/'), originalUrl);
+            if (link.href.startsWith(window.location.href)) {
+                link.href = link.href.replace(window.location.href, host);
+            }
+            else if (link.href.startsWith(window.origin, 0)) {
+                link.href = link.href.replace(window.origin, host);
             }
 
             return link;
