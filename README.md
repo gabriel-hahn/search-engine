@@ -4,6 +4,7 @@ A search engine API (NodeJS + MongoDB), crawling methods to search websites and 
 ## Something in the future?
 
 - [ ] Move websites crawling methods to back-end.
+- [ ] Improve crawling methods to ignore links with authentication.
 
 ## Contributing
 
