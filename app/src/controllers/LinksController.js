@@ -27,17 +27,17 @@ export default class InsertController {
         return dom.getElementsByTagName('head')[0].getElementsByTagName('title');
     }
 
-    async getImages(url) {
+    async getImagesTags(url) {
         let dom = await this.getDOMByURL(url);
-        return [...dom.getElementsByTagName('img')].filter(image => image.src.startsWith('http', 0));
+        return [...dom.getElementsByTagName('img')];
     }
 
-    //Get the links into href attributes throuth a URL.
+    //Get the links from href attributes throuth a URL.
     async getLinks(url, host, currentDepth) {
-        let dom = await this.getDOMByURL(url);
-
         //Verify if the href already exists in crawled list and add it.
         if (!this._alreadyCrawled.includes(url)) {
+
+            let dom = await this.getDOMByURL(url);
 
             this._alreadyCrawled.push(url);
 
@@ -56,6 +56,14 @@ export default class InsertController {
 
             //After insert the site in DB, do the same things with 'children' urls.
             this.insertLinks(url, title, description, keyword);
+
+            //Get images from website
+            let images = await this.getImagesTags(url);
+            images.forEach(image => {
+                if (image.dataset && image.dataset.src) {
+                    this.insertImages(url, image.dataset.src, image.alt, image.title);
+                }
+            });
 
             //Get links from the page
             let links = [...dom.getElementsByTagName('a')].filter(element => element.href.startsWith('http', 0));
