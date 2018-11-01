@@ -5,6 +5,7 @@ A search engine API (NodeJS + MongoDB), crawling methods to search websites and 
 
 - [ ] Move websites crawling methods to back-end.
 - [ ] Improve crawling methods to ignore links with authentication.
+- [ ] Get the more common sites that match with search term.
 
 ## Contributing
 
