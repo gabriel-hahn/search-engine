@@ -1,3 +1,3 @@
-import LinksController from './controllers/LinksController';
+import SearchController from './controllers/SearchController';
 
-window.app = new LinksController();
+window.app = new SearchController();

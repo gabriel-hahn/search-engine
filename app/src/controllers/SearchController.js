@@ -1,6 +1,6 @@
 import RequestUtil from '../utils/RequestUtil';
 
-let urlApiData = 'http://localhost:9090/api/site';
+let urlApiData = 'http://localhost:9090/api/';
 
 export default class SearchController {
 
@@ -9,6 +9,7 @@ export default class SearchController {
         this._searchLinkImages = document.getElementById('imagesLink');
 
         this.startEvents();
+        this.searchLinks(true);
     }
 
     changeLinkSelection(isSites) {
@@ -42,8 +43,18 @@ export default class SearchController {
 
     searchLinks(isSites) {
         let url = new URL(window.location.href);
-        let terms = url.searchParams.get('term');
+        let term = url.searchParams.get('term');
 
-        //Continue
+        //Get all links or images about the term searched.
+        RequestUtil.get(urlApiData.concat(isSites ? 'site' : 'image').concat('/getByTerm/').concat(term)).then(data => {
+            let response = JSON.parse(data);
+            this.setCountResults(response.length);
+            console.log(response);
+        });
+    }
+
+    setCountResults(count) {
+        let countEl = document.getElementsByClassName('resultsCount');
+        countEl[0].innerHTML = `${count} results found`;
     }
 }
