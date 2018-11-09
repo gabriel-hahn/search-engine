@@ -1,5 +1,5 @@
 # Search Engine
-A search engine API (NodeJS + MongoDB), crawling methods to search websites and a web page like Google to use this API.
+A search engine API (NodeJS + MongoDB), crawling methods to search websites and a web page like Google to use this API. Pure JavaScript + Unit Tests.
 
 ## Something in the future?
 
