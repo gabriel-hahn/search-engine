@@ -1,11 +1,17 @@
 # Search Engine
-A search engine API (NodeJS + MongoDB), crawling methods to search websites and a web page like Google to use this API. Pure JavaScript + Unit Tests.
+A search engine API, crawling methods to search websites and a web page like Google to use this API.
+
+- Vanilla JS.
+- NodeJS.
+- MongoDB.
+- Unit Tests.
+- Heroku.
 
 ## Something in the future?
 
 - [ ] Move websites crawling methods to back-end.
 - [ ] Improve crawling methods to ignore links with authentication.
-- [ ] Get the more common sites that match with search term.
+- [ ] Get more common sites that matches with search term.
 
 ## Contributing
 
