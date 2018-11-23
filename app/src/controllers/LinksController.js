@@ -18,7 +18,7 @@ export default class InsertController {
 
     //Site that will be crowling.
     startEvents() {
-        this.getLinks('https://www.globo.com', 'https://www.globo.com', 0);
+        this.getLinks('https://www.uol.com.br/', 'https://www.uol.com.br', 0);
     }
 
     getMetaTags() {
@@ -69,12 +69,12 @@ export default class InsertController {
             this.insertLinks(url, title, description, keyword);
 
             //Get images from website
-            /*let images = this.getImagesTags();
+            let images = this.getImagesTags();
             images.forEach(image => {
                 if (image.dataset && image.dataset.src) {
                     this.insertImages(url, image.dataset.src, image.alt, image.title);
                 }
-            });*/
+            });
 
             //Get links from the page.
             let links = [...this._currentDom.getElementsByTagName('a')].filter(element => element.href.startsWith('http', 0));
