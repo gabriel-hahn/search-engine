@@ -7,69 +7,80 @@ export default class InsertController {
 
     constructor() {
         this._alreadyCrawled = [];
-        this._depth = 2;
+        this._depth = 1;
+        this._currentDom = {};
+
+        //Social medias needs a authentication in most of time, so the project needs to ignore links that contains these words.
         this._socialNetworks = ['instagram', 'facebook', 'pinterest', 'linkedin'];
 
         this.startEvents();
     }
 
+    //Site that will be crowling.
     startEvents() {
-        this.getLinks('https://www.globo.com/', 'https://www.globo.com/', 0);
+        this.getLinks('https://www.globo.com', 'https://www.globo.com', 0);
     }
 
-    async getMetaTags(url) {
-        let dom = await this.getDOMByURL(url);
-        return dom.getElementsByTagName('meta');
+    getMetaTags() {
+        return this._currentDom.getElementsByTagName('meta');
     }
 
-    async getTitleTags(url) {
-        let dom = await this.getDOMByURL(url);
-        return dom.getElementsByTagName('head')[0].getElementsByTagName('title');
+    getTitleTags() {
+        return this._currentDom.getElementsByTagName('head')[0].getElementsByTagName('title');
     }
 
-    async getImagesTags(url) {
-        let dom = await this.getDOMByURL(url);
-        return [...dom.getElementsByTagName('img')];
+    getImagesTags() {
+        return [...this._currentDom.getElementsByTagName('img')];
     }
 
     //Get the links from href attributes throuth a URL.
+    //In this file, I used async/await only to make the code more easier to read.
+    //The performance isn't a critical field in this moment, because this file will be run once to each site that I'd crowling. POST functions are using asynchronous methods to best performance :)
     async getLinks(url, host, currentDepth) {
+
         //Verify if the href already exists in crawled list and add it.
         if (!this._alreadyCrawled.includes(url)) {
 
-            let dom = await this.getDOMByURL(url);
+            //DOM from the page.
+            this._currentDom = await this.getDOMByURL(url);
 
             this._alreadyCrawled.push(url);
 
             //Get title from the page
-            let titles = await this.getTitleTags(url);
-            let title = titles[0].innerText;
+            let titles = this.getTitleTags();
+            let title = titles[0] ? titles[0].innerText : '';
 
             //Get description and keywords from site.
-            let tags = await this.getMetaTags(url);
+            let tags = this.getMetaTags();
 
-            let description = [...tags].filter(tag => (tag.attributes["name"] && tag.attributes["name"].nodeValue === 'description'));
-            description = description && description[0] ? description[0].content : null;
+            let description = '';
+            let keyword = '';
 
-            let keyword = [...tags].filter(tag => (tag.attributes["name"] && tag.attributes["name"].nodeValue === 'keywords'));
-            keyword = keyword && keyword[0] ? keyword[0].content.split(',').map(key => key.trim()).join(',') : null;
+            //If description and keyword tags don't exist, the url will be insert too, but it's more harder to appear when user will use the project and search a site.
+            if (tags.length > 0) {
+                description = [...tags].filter(tag => (tag.attributes['name'] && tag.attributes['name'].nodeValue === 'description'));
+                description = description && description[0] ? description[0].content : '';
+
+                keyword = [...tags].filter(tag => (tag.attributes['name'] && tag.attributes['name'].nodeValue === 'keywords'));
+                keyword = keyword && keyword[0] ? keyword[0].content.split(',').map(key => key.trim()).join(',') : '';
+            }
 
             //After insert the site in DB, do the same things with 'children' urls.
             this.insertLinks(url, title, description, keyword);
 
             //Get images from website
-            let images = await this.getImagesTags(url);
+            /*let images = this.getImagesTags();
             images.forEach(image => {
                 if (image.dataset && image.dataset.src) {
                     this.insertImages(url, image.dataset.src, image.alt, image.title);
                 }
-            });
+            });*/
 
-            //Get links from the page
-            let links = [...dom.getElementsByTagName('a')].filter(element => element.href.startsWith('http', 0));
+            //Get links from the page.
+            let links = [...this._currentDom.getElementsByTagName('a')].filter(element => element.href.startsWith('http', 0));
             let linksFixed = this.fixUrlsWithRoutes(links, host);
 
-            //Get the child links that will be 'crawled'.
+            //Get the child links that will be crawling.
             let childLinksToSearch = linksFixed.filter(link => link.href !== url);
 
             //To control the depth of links inside a webpage, the count of layers that crawling method will search.
@@ -118,7 +129,7 @@ export default class InsertController {
         RequestUtil.post(`${apiUrlSite.concat('/siteByUrl')}`, { url }).then(response => {
             if (JSON.parse(response).length === 0) {
                 RequestUtil.post(apiUrlSite, newData).then(data => {
-                    console.log('Success');
+                    console.log('URL added');
                 }).catch(err => {
                     console.error(err);
                 });
@@ -133,7 +144,7 @@ export default class InsertController {
         RequestUtil.post(`${apiUrlImage.concat('/imageByUrl')}`, { imageUrl }).then(response => {
             if (JSON.parse(response).length === 0) {
                 RequestUtil.post(apiUrlImage, newData).then(data => {
-                    console.log('Success');
+                    console.log('Image added');
                 }).catch(err => {
                     console.error(err);
                 });
