@@ -3,7 +3,7 @@ import RequestUtil from '../utils/RequestUtil';
 let apiUrlSite = 'http://localhost:9090/api/site';
 let apiUrlImage = 'http://localhost:9090/api/image';
 
-export default class InsertController {
+export default class LinksController {
 
     constructor() {
         this._alreadyCrawled = [];
@@ -13,7 +13,7 @@ export default class InsertController {
         //Social medias needs a authentication in most of time, so the project needs to ignore links that contains these words.
         this._socialNetworks = ['instagram', 'facebook', 'pinterest', 'linkedin'];
 
-        this.startEvents();
+        //this.startEvents();
     }
 
     //Site that will be crowling.
