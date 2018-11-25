@@ -6,23 +6,26 @@ import sinonChai from 'sinon-chai';
 
 chai.use(sinonChai);
 
-global.fetch = require('node-fetch');
-
 import LinksController from '../../src/controllers/LinksController';
 
 describe('Links', () => {
     let links;
-    let fetchedStub;
+    let xhr;
+    let requests;
 
     beforeEach(() => {
         links = new LinksController();
 
-        fetchedStub = sinon.stub(global, 'fetch');
-        fetchedStub.resolves({ json: () => { } });
+        global.XMLHttpRequest = sinon.useFakeXMLHttpRequest();
+        requests = [];
+
+        global.XMLHttpRequest.onCreate = function (xhr) {
+            requests.push(xhr);
+        };
     });
 
     afterEach(() => {
-        fetchedStub.restore();
+        global.XMLHttpRequest.restore();
     });
 
     describe('Smoke tests', () => {
@@ -64,6 +67,18 @@ describe('Links', () => {
 
         it('Should exists insertImages method', () => {
             expect(links.insertImages).to.exist;
+        });
+    });
+
+    describe('Request methods', () => {
+        it('Should call request once', () => {
+            links.insertLinks('site', 'title', 'description', 'keywords');
+            expect(requests.length).to.be.eq(1);
+        });
+
+        it('Should call request once', () => {
+            links.insertImages('site', 'imageUrl', 'alt', 'title');
+            expect(requests.length).to.be.eq(1);
         });
     });
 });
