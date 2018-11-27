@@ -10,7 +10,6 @@ import LinksController from '../../src/controllers/LinksController';
 
 describe('Links', () => {
     let links;
-    let xhr;
     let requests;
 
     beforeEach(() => {
