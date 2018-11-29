@@ -28,7 +28,7 @@ module.exports = {
                         'title': { '$regex': term, '$options': 'i' }
                     }
                 ]
-            });
+            }).sort([['clicks', -1]]);
 
         res.json(images);
     }

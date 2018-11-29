@@ -3,7 +3,7 @@ import 'babel-polyfill';
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import jsdom from 'mocha-jsdom';
+import { jsdom } from 'jsdom';
 
 chai.use(sinonChai);
 
@@ -14,7 +14,8 @@ describe('Search', () => {
     let requests;
 
     beforeEach(() => {
-        global.document = jsdom('<!doctype html><html><body></body></html>');
+        global.document = jsdom('');
+        global.window = document.defaultView;
 
         global.XMLHttpRequest = sinon.useFakeXMLHttpRequest();
         requests = [];
@@ -31,7 +32,7 @@ describe('Search', () => {
     });
 
     describe('Smoke tests', () => {
-
+        jsdom();
         it('Should exists changeLinkSelection method', () => {
             expect(search.changeLinkSelection).to.exist;
         });
@@ -50,9 +51,9 @@ describe('Search', () => {
     });
 
     describe('Request methods', () => {
-        it('Should call request once', () => {
+        it('Should call request twice', () => {
             search.searchLinks(true);
-            expect(requests.length).to.be.eq(1);
+            expect(requests.length).to.be.eq(2);
         });
     });
 });

@@ -28,7 +28,7 @@ module.exports = {
                         'keywords': { '$regex': term, '$options': 'i' }
                     }
                 ]
-            });
+            }).sort([['clicks', -1]]);
 
         res.json(sites);
     }

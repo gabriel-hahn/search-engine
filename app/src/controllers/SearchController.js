@@ -8,7 +8,7 @@ export default class SearchController {
         this._searchLinkSites = document.getElementById('sitesLink');
         this._searchLinkImages = document.getElementById('imagesLink');
 
-        this.startEvents();
+        //this.startEvents();
         this.searchLinks(true);
     }
 
