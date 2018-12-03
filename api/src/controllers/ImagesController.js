@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Image = mongoose.model('Image');
+const RequestUtils = require('../utils/RequestUtils');
 
 module.exports = {
     async insertImage(req, res) {
@@ -10,25 +11,19 @@ module.exports = {
         let images = await Image.find({ 'imageUrl': req.body.imageUrl });
         res.json(images);
     },
+    async getCountByTerm(req, res) {
+        let term = req.params.term;
+        let countImages = await Image.count({
+            $or: RequestUtils.getByTerm(term)
+        });
+
+        res.json(countImages);
+    },
     async getByTerm(req, res) {
         let term = req.params.term;
-        let images = await Image.find(
-            {
-                $or: [
-                    {
-                        'siteUrl': { '$regex': term, '$options': 'i' }
-                    },
-                    {
-                        'imageUrl': { '$regex': term, '$options': 'i' }
-                    },
-                    {
-                        'alt': { '$regex': term, '$options': 'i' }
-                    },
-                    {
-                        'title': { '$regex': term, '$options': 'i' }
-                    }
-                ]
-            }).sort([['clicks', -1]]);
+        let images = await Image.find({
+            $or: RequestUtils.getByTerm(term)
+        }).sort([['clicks', -1]]);
 
         res.json(images);
     }
