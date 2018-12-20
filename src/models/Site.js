@@ -9,4 +9,5 @@ let SitesSchema = new Schema({
     clicks: { type: Number, required: true, default: 0 },
 });
 
-mongoose.model('Site', SitesSchema);
+let Site = mongoose.model('Site', SitesSchema);
+module.exports = Site;

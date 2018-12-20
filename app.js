@@ -1,4 +1,4 @@
-import app from './config/server';
+import app from './src/config/server';
 
 let port = 9090;
 

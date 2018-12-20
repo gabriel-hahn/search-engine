@@ -12,7 +12,7 @@ app.use(expressValidator());
 app.use(cors());
 
 consign()
-    .include('/config/mongodb.js')
+    .include('/src/config/mongodb.js')
     .then('/src/routes')
     .then('/src/controllers')
     .into(app);
