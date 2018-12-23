@@ -5,7 +5,10 @@
   "main": "dir/app.js",
   "scripts": {
     "build": "rimraf dist/ && ./node_modules/.bin/babel ./ --out-dir dist/ --ignore ./node_modules --copy-files",
-    "start": "npm run build && node dist/app"
+    "start": "npm run build && node dist/app",
+    "test": "./node_modules/.bin/mocha tests/**/*.spec.js --require babel-register",
+    "test:coverage": "nyc npm test",
+    "coveralls": "npm run test:coverage && nyc report --reporter=text-lcov | coveralls"
   },
   "keywords": [],
   "author": "Gabriel Hahn Schaeffer <gabriel_hahn@hotmail.com>",
@@ -15,7 +18,10 @@
     "babel-loader": "^7.0.0",
     "babel-preset-env": "^1.3.2",
     "babel-register": "^6.24.0",
+    "coveralls": "2.13.0",
     "mocha": "^5.2.0",
+    "nock": "^10.0.4",
+    "nyc": "10.2.0",
     "rimraf": "^2.6.1"
   },
   "dependencies": {
