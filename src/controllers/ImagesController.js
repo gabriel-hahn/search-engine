@@ -1,3 +1,4 @@
+require('babel-polyfill');
 const mongoose = require('mongoose');
 const Image = mongoose.model('Image');
 const RequestUtils = require('../utils/RequestUtils');
