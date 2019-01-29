@@ -1,7 +1,7 @@
 const assert = require('assert');
 const nock = require('nock');
 const Site = require('../../src/models/Site');
-const SiteController = require('../../src/controllers/SiteController');
+const SitesController = require('../../src/controllers/SitesController');
 
 describe('Site controller tests', () => {
     //this.beforeAll(() => {
@@ -13,19 +13,19 @@ describe('Site controller tests', () => {
 
     describe('Smoke tests', () => {
         it('Should exists insertSite method', () => {
-            assert.ok(SiteController.insertSite);
+            assert.ok(SitesController.insertSite);
         });
 
         it('Should exists getSiteByUrl method', () => {
-            assert.ok(SiteController.getSiteByUrl);
+            assert.ok(SitesController.getSiteByUrl);
         });
 
         it('Should exists getCountByTerm method', () => {
-            assert.ok(SiteController.getCountByTerm);
+            assert.ok(SitesController.getCountByTerm);
         });
 
         it('Should exists getByTerm method', () => {
-            assert.ok(SiteController.getByTerm);
+            assert.ok(SitesController.getByTerm);
         });
     });
 });

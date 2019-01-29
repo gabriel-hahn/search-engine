@@ -1,5 +1,5 @@
 const assert = require('assert');
-const Images = require('../../src/models/Images');
+const Image = require('../../src/models/Image');
 const ImagesController = require('../../src/controllers/ImagesController');
 
 describe('Images controller tests', () => {

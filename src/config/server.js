@@ -14,6 +14,7 @@ app.use(cors());
 consign()
     .include('/src/config/mongodb.js')
     .then('/src/routes')
+    .then('/src/services')
     .then('/src/controllers')
     .into(app);
 

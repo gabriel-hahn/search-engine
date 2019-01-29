@@ -1,4 +1,4 @@
-const SiteController = require('../controllers/SiteController');
+const SiteController = require('../controllers/SitesController');
 
 module.exports = app => {
     app.post('/api/site', SiteController.insertSite);
