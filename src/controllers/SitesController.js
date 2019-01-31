@@ -2,10 +2,6 @@ require('babel-polyfill');
 const SitesService = require('../services/SitesService');
 
 module.exports = {
-    async insertSite(req, res) {
-        let site = await SitesService.createSite(req.body);
-        res.json(site);
-    },
     async getSiteByUrl(req, res) {
         let sites = await SitesService.findByUrl(req.body.url);
         res.json(sites);

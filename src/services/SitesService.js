@@ -4,7 +4,7 @@ const RequestUtils = require('../utils/RequestUtils');
 
 module.exports = {
     async createSite(body) {
-        return Site.create(req.body);
+        return Site.create(body);
     },
     async findByUrl(siteUrl) {
         return Site.find({ 'url': siteUrl });

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 let SitesSchema = new Schema({
-    url: { type: String, required: true, max: 512 },
+    url: { type: String, required: true, max: 950 },
     title: { type: String, required: true, max: 512 },
     description: { type: String, required: true, max: 512 },
     keywords: { type: String, required: false, max: 512 },

@@ -1,4 +1,3 @@
-const axios = require('axios');
 const ImagesService = require('./ImagesService');
 const SitesService = require('./SitesService');
 
@@ -201,7 +200,7 @@ class LinksService {
         let newData = { url, title, description, keywords };
 
         let siteExists = await SitesService.findByUrl(url);
-        if (!siteExists) {
+        if (siteExists == '') {
             SitesService.createSite(newData);
             console.log('Site added');
         }
@@ -219,7 +218,7 @@ class LinksService {
         let newData = { siteUrl, imageUrl, alt, title };
 
         let imageExists = await ImagesService.findByUrl(imageUrl);
-        if (!imageExists) {
+        if (imageExists == '') {
             ImagesService.createImage(newData);
             console.log('Image added');
         }
