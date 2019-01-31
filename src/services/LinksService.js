@@ -1,25 +1,45 @@
 const axios = require('axios');
+const ImagesService = require('./ImagesService');
+const SitesService = require('./SitesService');
+
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
 
 class LinksService {
 
     constructor() {
         this._alreadyCrawled = [];
         this._depth = 1;
-        this._currentDom = {};
+        this._currentDom = null;
+        this._currentWindow = null;
 
         //Social medias needs a authentication in most of time, so the project needs to ignore links that contains these words.
         this._socialNetworks = ['instagram', 'facebook', 'pinterest', 'linkedin'];
 
-        this._linksToCraw = ['https://medium.com/'];
+        //Sites to crawling. I really recommend to use news sites, because their have much information and links to other sites.
+        this._linksToCraw = ['https://medium.com', 'https://www.bbc.com/portuguese', 'https://www.terra.com.br', 'https://www.globo.com'];
 
-        //this.startEvents();
+        //Bind methods.
+        this.startCrawling = this.startCrawling.bind(this);
+        this.getMetaTags = this.getMetaTags.bind(this);
+        this.getTitleTags = this.getTitleTags.bind(this);
+        this.getImagesTags = this.getImagesTags.bind(this);
+        this.getLinks = this.getLinks.bind(this);
+        this.getKeywordByTag = this.getKeywordByTag.bind(this);
+        this.getDescriptionByTag = this.getDescriptionByTag.bind(this);
+        this.getDOMByURL = this.getDOMByURL.bind(this);
+        this.getNotSocialNetworkUrl = this.getNotSocialNetworkUrl.bind(this);
+        this.fixUrlsWithRoutes = this.fixUrlsWithRoutes.bind(this);
+        this.verifyLinks = this.verifyLinks.bind(this);
+        this.verifyImages = this.verifyImages.bind(this);
     }
 
     /**
      * Website that will be crawled. 
      */
-    startEvents() {
+    async startCrawling(req, res) {
         this._linksToCraw.forEach(link => this.getLinks(link, link, 0));
+        res.send('All sites included successfully');
     }
 
     /**
@@ -64,7 +84,7 @@ class LinksService {
 
             //Get title from the page
             let titles = this.getTitleTags();
-            let title = titles[0] ? titles[0].innerText : '';
+            let title = titles[0] ? titles[0].innerHTML : '';
 
             //Get description and keywords from site.
             let tags = this.getMetaTags();
@@ -134,8 +154,10 @@ class LinksService {
      * @param {URL that I want to get DOM object} url 
      */
     async getDOMByURL(url) {
-        let response = await axios.get(url);
-        return new DOMParser().parseFromString(response, 'text/html');
+        return await JSDOM.fromURL(url).then(dom => {
+            this._currentWindow = dom.window;
+            return dom.window.document;
+        });
     }
 
     /**
@@ -155,12 +177,12 @@ class LinksService {
      */
     fixUrlsWithRoutes(links, host) {
         return links.map(link => {
-            if (link.href.startsWith(window.location.href)) {
-                link.href = link.href.replace(window.location.href, host);
+            if (link.href.startsWith(this._currentWindow.location.href)) {
+                link.href = link.href.replace(this._currentWindow.location.href, host);
             }
 
-            else if (link.href.startsWith(window.origin, 0)) {
-                link.href = link.href.replace(window.origin, host);
+            else if (link.href.startsWith(this._currentWindow.origin, 0)) {
+                link.href = link.href.replace(this._currentWindow.origin, host);
             }
 
             return link;
@@ -175,12 +197,14 @@ class LinksService {
      * @param {Description of site} description
      * @param {Keywords of site} keywords
      */
-    verifyLinks(url, title, description, keywords) {
+    async verifyLinks(url, title, description, keywords) {
         let newData = { url, title, description, keywords };
 
-        RequestUtil.post(`${apiUrlSite.concat('/siteByUrl')}`, { url }).then(response => {
-            this.insert(response, newData, true);
-        });
+        let siteExists = await SitesService.findByUrl(url);
+        if (!siteExists) {
+            SitesService.createSite(newData);
+            console.log('Site added');
+        }
     }
 
     /**
@@ -191,30 +215,15 @@ class LinksService {
      * @param {Alt of the image} alt
      * @param {Title of the image} title
      */
-    verifyImages(siteUrl, imageUrl, alt, title) {
+    async verifyImages(siteUrl, imageUrl, alt, title) {
         let newData = { siteUrl, imageUrl, alt, title };
 
-        RequestUtil.post(`${apiUrlImage.concat('/imageByUrl')}`, { imageUrl }).then(response => {
-            this.insert(response, newData, false);
-        });
-    }
-
-    /**
-     * Send data to API, to save the new link.
-     * 
-     * @param {Response of verify methods} response
-     * @param {Data to save} newData
-     * @param {If the URL is a link of a site or a image} isLink     
-     */
-    insert(response, newData, isLink) {
-        if (JSON.parse(response).length === 0) {
-            RequestUtil.post(isLink ? apiUrlSite : apiUrlImage, newData).then(data => {
-                console.log('URL added');
-            }).catch(err => {
-                console.error(err);
-            });
+        let imageExists = await ImagesService.findByUrl(imageUrl);
+        if (!imageExists) {
+            ImagesService.createImage(newData);
+            console.log('Image added');
         }
     }
 }
 
-module.exports.startEvents = LinksService.prototype.startEvents;
+module.exports = new LinksService();

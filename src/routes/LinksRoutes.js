@@ -1,5 +1,5 @@
-const { startEvents } = require('../services/LinksService');
+const LinksService = require('../services/LinksService');
 
 module.exports = app => {
-    app.post('/api/start', startEvents);
+    app.post('/api/start', LinksService.startCrawling);
 }
