@@ -16,7 +16,7 @@ class LinksService {
         this._socialNetworks = ['instagram', 'facebook', 'pinterest', 'linkedin'];
 
         //Sites to crawling. I really recommend to use news sites, because their have much information and links to other sites.
-        this._linksToCraw = ['https://medium.com', 'https://www.bbc.com/portuguese', 'https://www.terra.com.br', 'https://www.globo.com'];
+        this._linksToCraw = ['https://www.udemy.com', 'https://www.youtube.com', 'https://gauchazh.clicrbs.com.br', 'https://medium.com', 'https://www.bbc.com/portuguese', 'https://www.bbc.com', 'https://www.terra.com.br', 'https://www.globo.com'];
 
         //Bind methods.
         this.startCrawling = this.startCrawling.bind(this);

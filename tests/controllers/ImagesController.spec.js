@@ -4,10 +4,6 @@ const ImagesController = require('../../src/controllers/ImagesController');
 
 describe('Images controller tests', () => {
     describe('Smoke tests', () => {
-        it('Should exists insertImage method', () => {
-            assert.ok(ImagesController.insertImage);
-        });
-
         it('Should exists getSiteByUrl method', () => {
             assert.ok(ImagesController.getImageByImageUrl);
         });

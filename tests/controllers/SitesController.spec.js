@@ -12,10 +12,6 @@ describe('Site controller tests', () => {
     //});
 
     describe('Smoke tests', () => {
-        it('Should exists insertSite method', () => {
-            assert.ok(SitesController.insertSite);
-        });
-
         it('Should exists getSiteByUrl method', () => {
             assert.ok(SitesController.getSiteByUrl);
         });
