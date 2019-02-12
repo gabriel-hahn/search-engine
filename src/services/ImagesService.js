@@ -17,6 +17,7 @@ module.exports = {
     async getByTerm(term) {
         return Image.find({
             $or: RequestUtils.getByTerm(term)
-        }).sort([['clicks', -1]]);
+        })
+        .sort([['clicks', -1]]);
     }
 }

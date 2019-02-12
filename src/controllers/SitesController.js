@@ -11,7 +11,7 @@ module.exports = {
         res.json(countSites);
     },
     async getByTerm(req, res) {
-        let sites = await SitesService.getByTerm(req.params.term);
+        let sites = await SitesService.getByTerm(req.params.term, req.headers.limit);
         res.json(sites);
     }
 };

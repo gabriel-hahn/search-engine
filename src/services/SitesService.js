@@ -14,9 +14,12 @@ module.exports = {
             $or: RequestUtils.getByTerm(term)
         });
     },
-    async getByTerm(term) {
+    async getByTerm(term, limit) {
         return Site.find({
             $or: RequestUtils.getByTerm(term)
-        }).sort([['clicks', -1]]);
+        })
+        .sort([['clicks', -1]])
+        .skip(limit ? parseInt(limit) : 0)
+        .limit(20);
     }
 }
