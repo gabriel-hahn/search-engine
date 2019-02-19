@@ -21,5 +21,10 @@ module.exports = {
         .sort([['clicks', -1]])
         .skip(limit ? parseInt(limit) : 0)
         .limit(20);
+    },
+    async increaseClicks(id) {
+        let site = await Site.findById(id);
+        site.clicks++;
+        return site.save();
     }
 }

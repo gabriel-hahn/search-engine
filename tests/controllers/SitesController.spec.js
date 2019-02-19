@@ -23,5 +23,9 @@ describe('Site controller tests', () => {
         it('Should exists getByTerm method', () => {
             assert.ok(SitesController.getByTerm);
         });
+
+        it('Should exists increaseClicks method', () => {
+            assert.ok(SitesController.increaseClicks);
+        });
     });
 });

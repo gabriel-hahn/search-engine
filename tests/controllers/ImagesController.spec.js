@@ -4,8 +4,8 @@ const ImagesController = require('../../src/controllers/ImagesController');
 
 describe('Images controller tests', () => {
     describe('Smoke tests', () => {
-        it('Should exists getSiteByUrl method', () => {
-            assert.ok(ImagesController.getImageByImageUrl);
+        it('Should exists getImageByUrl method', () => {
+            assert.ok(ImagesController.getImageByUrl);
         });
 
         it('Should exists getCountByTerm method', () => {
@@ -14,6 +14,10 @@ describe('Images controller tests', () => {
 
         it('Should exists getByTerm method', () => {
             assert.ok(ImagesController.getByTerm);
+        });
+
+        it('Should exists increaseClicks method', () => {
+            assert.ok(ImagesController.increaseClicks);
         });
     });
 });

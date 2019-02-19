@@ -18,6 +18,11 @@ module.exports = {
         return Image.find({
             $or: RequestUtils.getByTerm(term)
         })
-        .sort([['clicks', -1]]);
+            .sort([['clicks', -1]]);
+    },
+    async increaseClicks(id) {
+        let image = await Image.findById(id);
+        image.clicks++;
+        return Image.save();
     }
 }
