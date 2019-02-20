@@ -1,4 +1,4 @@
-/*const assert = require('assert');
+const assert = require('assert');
 const LinksService = require('../../src/services/LinksService');
 
 const jsdom = require("jsdom");
@@ -77,4 +77,4 @@ describe('Links service tests', () => {
         //LinksService._currentDom
         //let metaTags = LinksService.getMetaTags();
     });
-});*/
+});
