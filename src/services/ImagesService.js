@@ -23,6 +23,6 @@ module.exports = {
     async increaseClicks(id) {
         let image = await Image.findById(id);
         image.clicks++;
-        return Image.save();
+        return image.save();
     }
 }
