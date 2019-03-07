@@ -7,7 +7,6 @@ A search engine API + Crawling Websites (NodeJS + MongoDB) :mag_right:
 - NodeJS.
 - MongoDB.
 - Unit Tests.
-- Heroku.
 
 ## Contributing
 
