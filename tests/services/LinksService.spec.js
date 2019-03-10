@@ -10,19 +10,24 @@ describe("Links service tests", () => {
         <html>
             <head>
                 <title>Gabriel Hahn Site</title>
-                <meta charset="utf-8">
-                <meta content="Web Crawling" property="description">
+                <meta charset="utf-8" />
+                <meta content="Web Crawling" property="description" />
             </head>
             <body>
-                <a href="www.google.com.br" 
+                <a href="www.google.com.br" />
+                <img src="http://image.png" alt="Image" />
             </body>
         </html>
     `;
 
-  // It simules a DOM object to test all methods.
-  const DOM_OBJECT = new JSDOM(DOM);
+  const domObject = new JSDOM(DOM);
+  LinksService.setCurrentDomObject(domObject.window.document);
 
   describe("Smoke tests", () => {
+    it("Should exists setCurrentDomObject method", () => {
+      assert.ok(LinksService.setCurrentDomObject);
+    });
+
     it("Should exists startCrawling method", () => {
       assert.ok(LinksService.startCrawling);
     });
@@ -72,8 +77,29 @@ describe("Links service tests", () => {
     });
   });
 
-  describe("Should return all meta tags found", () => {
-    //LinksService._currentDom
-    //let metaTags = LinksService.getMetaTags();
+  describe("Get tags from DOM", () => {
+    it("Should return all meta tags found", () => {
+      let metaTags = LinksService.getMetaTags();
+      assert.equal(metaTags.length, 2);
+    });
+
+    it("Should return correct sort of results", () => {
+      let metaTags = LinksService.getMetaTags();
+      assert.ok(metaTags[0].attributes.length === 1);
+    });
+  });
+
+  describe("Get title from DOM", () => {
+    it("Should return correct title", () => {
+      let titleTags = LinksService.getTitleTags();
+      assert.equal(titleTags[0].textContent, "Gabriel Hahn Site");
+    });
+  });
+
+  describe("Get images from DOM", () => {
+    it("Should return the correct image URL", () => {
+      let imagesTags = LinksService.getImagesTags();
+      assert.equal(imagesTags[0].src, "http://image.png/");
+    });
   });
 });

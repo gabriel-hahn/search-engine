@@ -27,6 +27,7 @@ class LinksService {
     ];
 
     //Bind methods.
+    this.setCurrentDomObject = this.setCurrentDomObject.bind(this);
     this.startCrawling = this.startCrawling.bind(this);
     this.getMetaTags = this.getMetaTags.bind(this);
     this.getTitleTags = this.getTitleTags.bind(this);
@@ -39,6 +40,15 @@ class LinksService {
     this.fixUrlsWithRoutes = this.fixUrlsWithRoutes.bind(this);
     this.verifyLinks = this.verifyLinks.bind(this);
     this.verifyImages = this.verifyImages.bind(this);
+  }
+
+  /**
+   * Set a new current DOM to be use.
+   *
+   * @param {DOM Object} dom
+   */
+  setCurrentDomObject(dom) {
+    this._currentDom = dom;
   }
 
   /**
@@ -85,7 +95,8 @@ class LinksService {
     //Verify if the href already exists in crawled list and add it.
     if (!this._alreadyCrawled.includes(url)) {
       //DOM from the page.
-      this._currentDom = await this.getDOMByURL(url);
+      let dom = await this.getDOMByURL(url);
+      this.setCurrentDomObject(dom);
 
       this._alreadyCrawled.push(url);
 
