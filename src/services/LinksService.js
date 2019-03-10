@@ -55,7 +55,11 @@ class LinksService {
    * Website that will be crawled.
    */
   async startCrawling(req, res) {
-    this._linksToCraw.forEach(link => this.getLinks(link, link, 0));
+    this._linksToCraw.forEach(link => {
+      let params = { url: link, host: link, currentDepth: 0 };
+      this.getLinks(params);
+    });
+
     res.send("All sites included successfully");
   }
 
@@ -87,11 +91,13 @@ class LinksService {
    * In this file, I used async/await only to make the code more easier to read.
    * The performance isn't a critical field in this moment, because this file will be run once to each site that I'd crawling. POST functions are using asynchronous methods to best performance :)
    *
-   * @param {URL that will be crawled} url
-   * @param {Current host (domain)} host
-   * @param {Current depth of crawling} currentDepth
+   * @param {Params (url, host and currentDepth)} params
    */
-  async getLinks(url, host, currentDepth) {
+  async getLinks(params) {
+    let url = params.url;
+    let host = params.host;
+    let currentDepth = params.currentDepth;
+
     //Verify if the href already exists in crawled list and add it.
     if (!this._alreadyCrawled.includes(url)) {
       //DOM from the page.
@@ -109,16 +115,23 @@ class LinksService {
 
       //If description and keyword tags don't exist, the url will be insert too, but it's more harder to appear when the user will use the project and search a site.
       let description = this.getDescriptionByTag(tags);
-      let keyword = this.getKeywordByTag(tags);
+      let keywords = this.getKeywordByTag(tags);
 
       //After insert the site in DB, do the same things with 'children' urls.
-      this.verifyLinks(url, title, description, keyword);
+      let paramsVerifyLinks = { url, title, description, keywords };
+      this.verifyLinks(paramsVerifyLinks);
 
       //Get images from website
       let images = this.getImagesTags();
       images.forEach(image => {
         if (image.dataset && image.dataset.src) {
-          this.verifyImages(url, image.dataset.src, image.alt, image.title);
+          let paramsVerifyImages = {
+            siteUrl: url,
+            imageUrl: image.dataset.src,
+            alt: image.alt,
+            title: image.title
+          };
+          this.verifyImages(paramsVerifyImages);
         }
       });
 
@@ -141,7 +154,8 @@ class LinksService {
             !link.href.startsWith("http://localhost:8080") &&
             this.getNotSocialNetworkUrl(link.href)
           ) {
-            this.getLinks(link.href, link.host, currentDepth);
+            let params = { url: link.href, host: link.host, currentDepth };
+            this.getLinks(params);
           }
         });
       }
@@ -230,17 +244,12 @@ class LinksService {
   /**
    * Verify if the URL already exists in database.
    *
-   * @param {Site of URL} url
-   * @param {Title of site} title
-   * @param {Description of site} description
-   * @param {Keywords of site} keywords
+   * @param {Link's info} params
    */
-  async verifyLinks(url, title, description, keywords) {
-    let newData = { url, title, description, keywords };
-
-    let siteExists = await SitesService.findByUrl(url);
+  async verifyLinks(params) {
+    let siteExists = await SitesService.findByUrl(params.url);
     if (siteExists == "") {
-      SitesService.createSite(newData);
+      SitesService.createSite(params);
       console.log("Site added");
     }
   }
@@ -248,17 +257,12 @@ class LinksService {
   /**
    * Verify if the image already exists in database.
    *
-   * @param {Site that contains the url image} siteUrl
-   * @param {Image URL} imageUrl
-   * @param {Alt of the image} alt
-   * @param {Title of the image} title
+   * @param {Image's info} params
    */
-  async verifyImages(siteUrl, imageUrl, alt, title) {
-    let newData = { siteUrl, imageUrl, alt, title };
-
-    let imageExists = await ImagesService.findByUrl(imageUrl);
+  async verifyImages(params) {
+    let imageExists = await ImagesService.findByUrl(params.imageUrl);
     if (imageExists == "") {
-      ImagesService.createImage(newData);
+      ImagesService.createImage(params);
       console.log("Image added");
     }
   }
