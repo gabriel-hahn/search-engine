@@ -3,7 +3,7 @@ require("../../src/models/Site");
 const assert = require("assert");
 const { expect } = require("chai");
 const mongoose = require("mongoose");
-const Image = mongoose.model("Site");
+const Site = mongoose.model("Site");
 const sinon = require("sinon");
 var httpMock = require("node-mocks-http");
 
@@ -11,7 +11,7 @@ const SitesController = require("../../src/controllers/SitesController");
 const SitesService = require("../../src/services/SitesService");
 
 describe("Site controller tests", () => {
-  const SITE = new Image({
+  const SITE = new Site({
     url: "http://www.teste.com.br",
     description: "Description",
     keywords: "Test, unit, node",
