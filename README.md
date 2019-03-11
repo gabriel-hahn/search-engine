@@ -4,9 +4,53 @@
 
 A search engine API + Crawling Websites (NodeJS + MongoDB) :mag_right:
 
-- NodeJS.
-- MongoDB.
-- Unit Tests.
+## Getting Started
+
+To run this project, you must have installed:
+NodeJS (10.13.0 or grather).
+MongoDB.
+NPM.
+
+1 - Inside the projects folder, run the follow command to install all NPM dependencies:
+
+```
+npm i
+```
+
+2 - Create a database to project in MongoDB.
+
+3 - Start MongoDB and change the config/mongodb.js file to right database and url connection as you created before.
+
+Start the project:
+
+```
+npm run start
+```
+
+4 - To crawling sites, you need to make a POST request to 'api/start' endpoint.
+
+5 - To include more sites to crawling, you can change the 'this._linksToCraw' property inside services/LinksService.js file.
+
+## Tests
+To run the tests, you can choose between with or without coverage:
+
+```
+npm run test
+```
+
+```
+npm run test:coverage
+```
+
+## Demo
+Project [Search Engine App](https://github.com/gabriel-hahn/search-engine-app) has GIF demo of the project running with a Front-end project that is similar Google.
+
+## Something in the future?
+
+- [ ] Deploy of a demo.
+- [ ] Swagger documentation.
+- [ ] +95% of unit tests coverage.
+- [ ] Include more sites to crawling through a web page.
 
 ## Contributing
 
