@@ -22,7 +22,7 @@ npm i
 
 3 - Start MongoDB and change the config/mongodb.js file to right database and url connection as you created before.
 
-Start the project:
+Start the project (local host at 9090):
 
 ```
 npm run start
