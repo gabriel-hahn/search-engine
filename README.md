@@ -7,9 +7,10 @@ A search engine API + Crawling Websites (NodeJS + MongoDB) :mag_right:
 ## Getting Started
 
 To run this project, you must have installed:
+
 NodeJS (10.13.0 or grather).
+
 MongoDB.
-NPM.
 
 1 - Inside the projects folder, run the follow command to install all NPM dependencies:
 
