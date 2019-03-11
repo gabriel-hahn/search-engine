@@ -22,15 +22,15 @@ npm i
 
 3 - Start MongoDB and change the config/mongodb.js file to right database and url connection as you created before.
 
-Start the project (local host at 9090):
+4 - Start the project (local host at 9090):
 
 ```
 npm run start
 ```
 
-4 - To crawling sites, you need to make a POST request to 'api/start' endpoint.
+To crawling sites, you need to make a POST request to 'api/start' endpoint.
 
-5 - To include more sites to crawling, you can change the 'this._linksToCraw' property inside services/LinksService.js file.
+To include more sites to crawling, you can change the 'this._linksToCraw' property inside services/LinksService.js file.
 
 ## Tests
 To run the tests, you can choose between with or without coverage:
