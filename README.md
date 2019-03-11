@@ -48,7 +48,7 @@ Project [Search Engine App](https://github.com/gabriel-hahn/search-engine-app) h
 
 ## Something in the future?
 
-- [ ] Deploy of a demo.
+- [ ] Deploy a demo of this project.
 - [ ] Swagger documentation.
 - [ ] +95% of unit tests coverage.
 - [ ] Include more sites to crawling through a web page.
